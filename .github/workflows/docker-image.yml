@@ -21,6 +21,8 @@ jobs:
     needs: build
     runs-on: [self-hosted]
     steps:
+      - name: Check Docker Version
+        run: docker --version
       - name: Pull image from Docker Hub
         run: docker pull ${{ secrets.DOCKER_USERNAME }}/node-js-app:latest
       - name: Delete old container
