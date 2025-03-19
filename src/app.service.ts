@@ -6,6 +6,6 @@ import { Public } from 'src/decorators/public.decorator';
 export class AppService {
   @Query(() => String)
   getHello() {
-    return 'Hello World!';
+    return 'Hello World!!!!';
   }
 }
