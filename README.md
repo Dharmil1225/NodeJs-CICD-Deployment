@@ -1,4 +1,4 @@
-# RaftLab Practical
+# NodeJS-CICD-Deployment
 
 This project is a backend API with a focus on using Redis and PostgreSQL as services. The application follows a modular architecture using NestJS.
 
