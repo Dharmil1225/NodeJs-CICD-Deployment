@@ -23,7 +23,7 @@ import { RedisService } from 'src/utils/redis.service';
 export class AuthService {
   userRepo: Repository<User>;
   userLogin: Repository<UserLoginHistory>;
-  constructor(public redisService: RedisService) {
+  constructor() {
     this.userRepo = connection.getRepository(User);
     this.userLogin = connection.getRepository(UserLoginHistory);
   }
@@ -47,7 +47,7 @@ export class AuthService {
       const { accessToken } = createToken(payload, true);
       await this.userLogin.save({ accessToken, user });
       const otp = Math.floor(100000 + Math.random() * 900000).toString();
-      await this.redisService.set(`otp:${email}`, otp, 300);
+      // await this.redisService.set(`otp:${email}`, otp, 300);
       // We can implement send email functionality here if we want for OTP, Currently we are sending it in response
 
       return { ...user, accessToken, otp };
@@ -68,14 +68,14 @@ export class AuthService {
 
     const attemptsKey = `login_failed_attempts:${email}`;
     if (!user || !compare(password, user.password)) {
-      const loginAttempts = await this.redisService.increment(
-        attemptsKey,
-        1,
-        300,
-      );
-      if (loginAttempts >= 5) {
-        throw new BadRequestException('Too many login attempts');
-      }
+      // const loginAttempts = await this.redisService.increment(
+      //   attemptsKey,
+      //   1,
+      //   300,
+      // );
+      // if (loginAttempts >= 5) {
+      //   throw new BadRequestException('Too many login attempts');
+      // }
       throw new BadRequestException(errorMessages.INVALID_INPUT);
     }
 
@@ -89,7 +89,7 @@ export class AuthService {
         { id: user.loginHistory.id, user: { id: user.id } },
         { accessToken },
       );
-      await this.redisService.delete(attemptsKey);
+      // await this.redisService.delete(attemptsKey);
       return { accessToken, email, id: user.id };
     } catch (error) {
       throw new InternalServerErrorException(
@@ -99,11 +99,11 @@ export class AuthService {
   }
 
   async verifyOtp(email: string, otp: string) {
-    const storedOtp = await this.redisService.get(`otp:${email}`);
-    if (storedOtp === otp) {
-      await this.redisService.delete(`otp:${email}`);
-      return true;
-    }
+    // const storedOtp = await this.redisService.get(`otp:${email}`);
+    // if (storedOtp === otp) {
+    //   await this.redisService.delete(`otp:${email}`);
+    //   return true;
+    // }
     return false;
   }
 }
