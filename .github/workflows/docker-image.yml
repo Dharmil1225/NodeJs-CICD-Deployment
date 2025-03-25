@@ -21,11 +21,20 @@ jobs:
     needs: build
     runs-on: [self-hosted]
     steps:
-      - name: Check Docker Version
-        run: docker --version
-      - name: Pull image from Docker Hub
-        run: docker pull ${{ secrets.DOCKER_USERNAME }}/node-js-app:latest
-      - name: Delete old container
-        run: docker rm -f nodejs-app-container || true
-      - name: Run Docker container
-        run: docker run -d -p 9001:9001 --name nodejs-app-container ${{ secrets.DOCKER_USERNAME }}/node-js-app
+    - name: Check Docker Version
+      run: docker --version
+      
+    - name: Pull image from Docker Hub
+      run: docker pull ${{ secrets.DOCKER_USERNAME }}/node-js-app:latest
+
+    - name: Stop existing container (if running)
+      run: docker stop nodejs-app-container || true
+
+    - name: Remove old Docker image (keep the container)
+      run: docker image prune -a -f
+
+    - name: Restart the container with a new image
+      run: |
+        docker run -d --rm --name nodejs-app-container \
+        --env-file /path/to/.env -p 9001:9001 \
+        ${{ secrets.DOCKER_USERNAME }}/node-js-app:latest
