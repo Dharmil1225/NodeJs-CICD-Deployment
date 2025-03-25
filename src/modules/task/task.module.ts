@@ -4,6 +4,6 @@ import { TaskResolver } from './task.resolver';
 import { RedisService } from 'src/utils/redis.service';
 
 @Module({
-  providers: [TaskResolver, TaskService, RedisService],
+  providers: [TaskResolver, TaskService],
 })
 export class TaskModule {}

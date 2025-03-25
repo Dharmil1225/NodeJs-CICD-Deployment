@@ -4,6 +4,6 @@ import { AuthResolver } from './auth.resolver';
 import { RedisService } from 'src/utils/redis.service';
 
 @Module({
-  providers: [AuthResolver, AuthService, RedisService],
+  providers: [AuthResolver, AuthService],
 })
 export class AuthModule {}

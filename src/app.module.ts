@@ -32,8 +32,8 @@ import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin
       provide: APP_GUARD,
       useClass: AuthGuard,
     },
-    EventsGateway,
-    EventsService,
+    // EventsGateway,
+    // EventsService,
   ],
 })
 export class AppModule {}
