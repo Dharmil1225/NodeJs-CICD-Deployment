@@ -30,7 +30,7 @@ jobs:
     - name: Ensure .env file exists
       run: |
         if [ ! -f /home/ubuntu/nodejs-app.env ]; then
-          echo "DATABASE_HOST=localhost" > /home/ubuntu/nodejs-app.env
+          echo "DATABASE_HOST=host.docker.internal" > /home/ubuntu/nodejs-app.env
           echo "DATABASE_PORT=5432" >> /home/ubuntu/nodejs-app.env
           echo "DATABASE_USER=postgres" >> /home/ubuntu/nodejs-app.env
           echo "DATABASE_PASSWORD=admin" >> /home/ubuntu/nodejs-app.env
