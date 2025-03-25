@@ -27,7 +27,7 @@ services:
       - REDIS_HOSTS=local:redis:6379
 
   app:
-    image: ${{ secrets.DOCKER_USERNAME }}/node-js-app
+    image: dharmilvakani/node-js-app
     container_name: nodejs-app-container
     restart: always
     depends_on:
