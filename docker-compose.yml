@@ -10,12 +10,14 @@ services:
       POSTGRES_DB: test
     ports:
       - '5433:5432'
+
   redis:
     image: redis:latest
     container_name: redis
     restart: always
     ports:
       - '6380:6379'
+
   redis-commander:
     image: rediscommander/redis-commander:latest
     container_name: redis-commander
@@ -23,3 +25,19 @@ services:
       - '8081:8081'
     environment:
       - REDIS_HOSTS=local:redis:6379
+
+  app:
+    image: ${{ secrets.DOCKER_USERNAME }}/node-js-app
+    container_name: nodejs-app-container
+    restart: always
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_USER: pg
+      DATABASE_PASSWORD: admin
+      DATABASE_NAME: test
+    ports:
+      - '9001:9001'
