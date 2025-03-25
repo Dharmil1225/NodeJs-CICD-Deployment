@@ -21,20 +21,24 @@ jobs:
     needs: build
     runs-on: [self-hosted]
     steps:
-    - name: Check Docker Version
-      run: docker --version
-      
     - name: Pull image from Docker Hub
       run: docker pull ${{ secrets.DOCKER_USERNAME }}/node-js-app:latest
 
-    - name: Stop existing container (if running)
-      run: docker stop nodejs-app-container || true
+    - name: Delete old container
+      run: docker rm -f nodejs-app-container || true
 
-    - name: Remove old Docker image (keep the container)
-      run: docker image prune -a -f
-
-    - name: Restart the container with a new image
+    - name: Ensure .env file exists
       run: |
-        docker run -d --rm --name nodejs-app-container \
-        --env-file /path/to/.env -p 9001:9001 \
-        ${{ secrets.DOCKER_USERNAME }}/node-js-app:latest
+        if [ ! -f /home/ubuntu/nodejs-app.env ]; then
+          echo "DATABASE_HOST=localhost" > /home/ubuntu/nodejs-app.env
+          echo "DATABASE_PORT=5432" >> /home/ubuntu/nodejs-app.env
+          echo "DATABASE_USER=postgres" >> /home/ubuntu/nodejs-app.env
+          echo "DATABASE_PASSWORD=admin" >> /home/ubuntu/nodejs-app.env
+          echo "DATABASE_NAME=test" >> /home/ubuntu/nodejs-app.env
+        fi
+
+    - name: Run Docker container using .env file
+      run: |
+        docker run -d -p 9001:9001 --name nodejs-app-container \
+          --env-file /home/ubuntu/nodejs-app.env \
+          ${{ secrets.DOCKER_USERNAME }}/node-js-app
